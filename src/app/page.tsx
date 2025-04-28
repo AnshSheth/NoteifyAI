@@ -1,125 +1,207 @@
-import Link from 'next/link'
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
-      {/* Header */}
-      <header className="pt-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-indigo-900">NoteifyAI</h2>
-          <nav>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-white">
+      {/* Navigation */}
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <span className="text-2xl font-bold text-gray-900">Noteify</span>
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">AI</span>
+          </div>
+          <div className="flex space-x-4">
             <Link 
               href="/record" 
-              className="text-indigo-600 hover:text-indigo-800 font-medium"
+              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
             >
-              Start Recording
+              Record
             </Link>
-          </nav>
+            <a 
+              href="#features" 
+              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+            >
+              Features
+            </a>
+          </div>
         </div>
-      </header>
+      </nav>
 
       {/* Hero Section */}
-      <main>
-        <div className="relative overflow-hidden">
-          <div className="max-w-7xl mx-auto pt-10 pb-16 px-4 sm:pt-12 sm:px-6 lg:pt-16 lg:pb-20 lg:px-8">
-            <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-              <div className="lg:col-span-6">
-                <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl tracking-tight">
-                  <span className="block xl:inline">Transform lectures into</span>{' '}
-                  <span className="block text-indigo-600 xl:inline">organized notes</span>
-                </h1>
-                <p className="mt-6 text-xl text-gray-600 max-w-xl">
-                  Your AI-powered lecture recording and note-taking assistant. Record, transcribe, and organize your lectures in real-time.
-                </p>
-                <div className="mt-10">
-                  <Link
-                    href="/record"
-                    className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-150 ease-in-out"
-                  >
-                    Start Recording
-                    <svg xmlns="http://www.w3.org/2000/svg" className="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                    </svg>
-                  </Link>
-                </div>
+      <div className="relative px-4 pt-16 pb-20 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-5xl font-extrabold tracking-tight text-gray-900 leading-tight">
+                Transform your 
+                <span className="block mt-1">lectures into</span>
+                <span className="bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent block mt-1">
+                  organized notes
+                </span>
+              </h1>
+              
+              <p className="mt-6 text-lg text-gray-600 max-w-lg">
+                Real-time lecture transcription that lets you capture classroom content instantly as it's being taught. Perfect for students, researchers, and academic professionals.
+              </p>
+              
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link
+                  href="/record"
+                  className="px-6 py-3 text-base font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-md transition-all duration-200 transform hover:scale-105"
+                >
+                  Start Recording
+                </Link>
+                
+                <a
+                  href="#features"
+                  className="px-6 py-3 text-base font-medium rounded-lg text-indigo-600 bg-white border border-indigo-200 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm transition-all duration-200"
+                >
+                  Learn More
+                </a>
               </div>
-              <div className="mt-12 lg:mt-0 lg:col-span-6">
-                <div className="relative">
-                  <div className="bg-white rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200 p-5">
-                    <div className="h-5 w-5 rounded-full bg-indigo-600 mb-3 animate-pulse"></div>
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-3"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-3"></div>
-                    <div className="h-4 bg-gray-200 rounded w-5/6 mb-3"></div>
-                    <div className="h-4 bg-gray-200 rounded w-2/3 mb-3"></div>
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
-                    <div className="h-10 bg-indigo-100 rounded-lg flex items-center pl-4 text-gray-500 text-sm">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                      </svg>
-                      Start recording your lecture...
-                    </div>
+            </div>
+            
+            <div className="relative mx-auto max-w-md">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-2xl transform rotate-3 opacity-10 blur-2xl"></div>
+              <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div className="p-6">
+                  <div className="h-6 w-6 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
+                    <svg className="h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="h-2 bg-gray-200 rounded-full w-3/4"></div>
+                    <div className="h-2 bg-gray-200 rounded-full"></div>
+                    <div className="h-2 bg-gray-200 rounded-full w-5/6"></div>
+                    <div className="h-2 bg-gray-200 rounded-full w-2/3"></div>
+                    <div className="h-2 bg-gray-200 rounded-full"></div>
+                    <div className="h-2 bg-gray-200 rounded-full w-4/5"></div>
+                  </div>
+                  <div className="mt-6 flex justify-end">
+                    <div className="h-8 w-24 bg-indigo-100 rounded-md"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Features Section */}
-        <div className="bg-white pt-16 pb-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
-                Powerful Features
-              </h2>
-              <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
-                Everything you need for better lecture notes
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-              <div className="bg-gray-50 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                <div className="h-12 w-12 rounded-md bg-indigo-500 text-white flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                  </svg>
+      {/* Wave Divider */}
+      <div className="relative">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" className="text-white">
+          <path fill="currentColor" fillOpacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+        </svg>
+      </div>
+
+      {/* Features Section */}
+      <div id="features" className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-600 mb-3">FEATURES</span>
+            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              A better way to capture your thoughts
+            </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
+              Powered by AI to help you focus on what matters most.
+            </p>
+          </div>
+
+          <div className="mt-16">
+            <div className="grid md:grid-cols-2 gap-x-8 gap-y-12">
+              {/* Feature 1 */}
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Record Lectures</h3>
-                <p className="text-gray-600">Easily record your lectures with a single click using your device's microphone.</p>
+                <div className="ml-4">
+                  <h3 className="text-lg font-medium text-gray-900">Real-time Lecture Transcription</h3>
+                  <p className="mt-2 text-base text-gray-600">
+                    See your lectures transform into text instantly, enabling seamless note-taking during classes and academic presentations.
+                  </p>
+                </div>
               </div>
-              
-              <div className="bg-gray-50 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                <div className="h-12 w-12 rounded-md bg-indigo-500 text-white flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+
+              {/* Feature 2 */}
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                    </svg>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Real-time Transcription</h3>
-                <p className="text-gray-600">See your lecture transcribed as you speak with our advanced speech recognition.</p>
+                <div className="ml-4">
+                  <h3 className="text-lg font-medium text-gray-900">Browser-Based Technology</h3>
+                  <p className="mt-2 text-base text-gray-600">
+                    Works directly in your browser with no additional downloads or installations required.
+                  </p>
+                </div>
               </div>
-              
-              <div className="bg-gray-50 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                <div className="h-12 w-12 rounded-md bg-indigo-500 text-white flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
+
+              {/* Feature 3 */}
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">AI-Generated Notes</h3>
-                <p className="text-gray-600">Get structured notes and outlines automatically generated from your lecture.</p>
+                <div className="ml-4">
+                  <h3 className="text-lg font-medium text-gray-900">AI Note Generation</h3>
+                  <p className="mt-2 text-base text-gray-600">
+                    Automatically creates a structured outline and notes from your transcribed speech.
+                  </p>
+                </div>
+              </div>
+
+              {/* Feature 4 */}
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-lg font-medium text-gray-900">Persistent Storage</h3>
+                  <p className="mt-2 text-base text-gray-600">
+                    Your notes are saved securely in the cloud, linked to each recording session.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </main>
-      
-      {/* Footer */}
-      <footer className="bg-gray-50 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} NoteifyAI. All rights reserved.
+      </div>
+
+      {/* CTA Section */}
+      <div className="bg-gradient-to-r from-blue-500 to-indigo-600">
+        <div className="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+            Ready to get started?
+          </h2>
+          <p className="mt-4 text-lg leading-6 text-blue-100">
+            Start recording and see how Noteify AI can transform your lecture notes.
           </p>
+          <Link
+            href="/record"
+            className="mt-8 inline-block px-6 py-3 rounded-lg text-indigo-600 bg-white hover:bg-blue-50 font-medium shadow-md transition-all duration-200 transform hover:scale-105"
+          >
+            Start Recording
+          </Link>
         </div>
-      </footer>
+      </div>
     </div>
-  )
+  );
 } 
