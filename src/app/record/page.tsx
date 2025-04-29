@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useRealtimeTranscription } from '@/hooks/useRealtimeTranscription'; // Changed to use RealtimeTranscription
+import { Chat } from '@/components/Chat';
 
 // Add a simple utility to handle basic bullet point formatting
 const formatNotesContent = (text: string) => {
@@ -47,8 +48,6 @@ export default function RecordPage() {
   } = useRealtimeTranscription();
   
   const [notes, setNotes] = useState<string>('');
-  const [debug, setDebug] = useState<string[]>([]);
-  const [showDebug, setShowDebug] = useState(false);
   
   // Refs for the transcript segments
   const transcriptSegmentsRef = useRef<{timestamp: string; text: string}[]>([]);
@@ -118,26 +117,6 @@ export default function RecordPage() {
     container.scrollTop = container.scrollHeight;
   }, [transcript]);
   
-  // Log for debugging
-  useEffect(() => {
-    const originalConsoleLog = console.log;
-    console.log = (...args) => {
-      originalConsoleLog(...args);
-      setDebug(prev => {
-        const maxLogs = 20;
-        const newLogs = [...prev, args.join(' ')];
-        if (newLogs.length > maxLogs) {
-          return newLogs.slice(newLogs.length - maxLogs);
-        }
-        return newLogs;
-      });
-    };
-    
-    return () => {
-      console.log = originalConsoleLog;
-    };
-  }, []);
-  
   // Update notes when generatedNotes change
   useEffect(() => {
     if (generatedNotes) {
@@ -170,12 +149,6 @@ export default function RecordPage() {
               <span className="text-gray-900">Noteify</span>
               <span className="bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">AI</span>
             </Link>
-            <button 
-              onClick={() => setShowDebug(!showDebug)}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              {showDebug ? 'Hide Debug' : 'Show Debug'}
-            </button>
           </div>
         </header>
 
@@ -185,17 +158,6 @@ export default function RecordPage() {
             Press the button to start recording. Your lecture will be transcribed in real-time.
           </p>
         </div>
-
-        {/* Debug Info */}
-        {showDebug && (
-          <div className="mb-4 p-3 bg-gray-800 text-white rounded-md text-xs font-mono overflow-auto max-h-40">
-            <div className="font-bold mb-1">Debug Logs:</div>
-            {debug.map((log, i) => (
-              <div key={i} className="truncate">{log}</div>
-            ))}
-            <div className="mt-2 text-gray-400">Session ID: {currentSessionId || 'none'}</div>
-          </div>
-        )}
 
         {/* Main Card - Recording UI & Controls */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
@@ -274,7 +236,7 @@ export default function RecordPage() {
         </div>
 
         {/* Live Transcription & Notes Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* Transcription Column */}
           <div className="bg-white rounded-xl shadow-lg p-8">
             <h2 className="text-xl font-semibold mb-4 flex items-center">
@@ -388,6 +350,13 @@ export default function RecordPage() {
                 Copy Notes
               </button>
             </div>
+          </div>
+        </div>
+
+        {/* Chat Section */}
+        <div className="bg-white rounded-xl shadow-lg mb-8">
+          <div className="grid grid-cols-1 h-[450px]">
+            <Chat transcript={transcript} />
           </div>
         </div>
       </div>
