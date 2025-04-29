@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js' // Import Supabase client
-import { v4 as uuidv4 } from 'uuid';
 
 // Define interfaces for our hook
 interface Segment {
@@ -87,6 +86,12 @@ createClient(supabaseUrl || '', supabaseAnonKey || '');
 
 // Interval for forced timestamp chunks (in milliseconds)
 const FORCED_CHUNK_INTERVAL = 5000; // 5 seconds - per user request
+
+// Cast to unknown first, then to the expected shape
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+  message?: string;
+}
 
 export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
   // State
@@ -202,8 +207,8 @@ export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
     };
     
     recognition.onerror = (event: Event) => {
-      // Cast to unknown first, then to the expected shape
-      const errorEvent = event as unknown as { error: string };
+      // Cast to unknown first, then to a proper type
+      const errorEvent = event as SpeechRecognitionErrorEvent;
       console.error('Speech recognition error', errorEvent.error);
       setError(`Speech recognition error: ${errorEvent.error}`);
       if (errorEvent.error === 'no-speech') {
@@ -281,7 +286,7 @@ export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
     
     try {
       // Generate new session ID
-      const sessionId = uuidv4();
+      const sessionId = crypto.randomUUID();
       setCurrentSessionId(sessionId);
       
       // Reset state
@@ -334,7 +339,7 @@ export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
       }
       setIsRecording(false);
     }
-  }, [isRecording, flushPending]);
+  }, [flushPending, isRecording]);
   
   // Cleanup on unmount
   useEffect(() => {

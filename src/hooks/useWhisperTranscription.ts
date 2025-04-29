@@ -148,7 +148,7 @@ export function useWhisperTranscription(): UseWhisperTranscriptionResult {
       const currentTime = Date.now();
       const chunkStartTime = lastProcessedTimeRef.current || recordingStartTimeRef.current;
       lastProcessedTimeRef.current = currentTime;
-
+      
       // Merge all the audio data
       const bufferSize = audioBufferRef.current.reduce((sum, buffer) => sum + buffer.length, 0);
       const mergedBuffer = new Float32Array(bufferSize);
@@ -157,7 +157,7 @@ export function useWhisperTranscription(): UseWhisperTranscriptionResult {
       for (const buffer of audioBufferRef.current) {
         mergedBuffer.set(buffer, offset);
         offset += buffer.length;
-      }
+        }
       
       // Clear the buffer after merging
       audioBufferRef.current = [];
@@ -184,9 +184,9 @@ export function useWhisperTranscription(): UseWhisperTranscriptionResult {
       if (maxLevel < 0.01 && rms < 0.005) {
         console.log('Audio level too low, likely silence - skipping processing');
         setIsProcessing(false);
-        return;
-      }
-      
+      return;
+    }
+    
       // Normalize audio to improve signal (if levels are too low)
       if (maxLevel < 0.1) {
         console.log(`Audio level low, applying normalization. Before max: ${maxLevel.toFixed(3)}`);
@@ -205,23 +205,23 @@ export function useWhisperTranscription(): UseWhisperTranscriptionResult {
         new Blob([], { type: 'audio/wav' });
       
       console.log(`WAV blob created, size: ${wavBlob.size} bytes`);
-      
+          
       // Create FormData and append the audio file
-      const formData = new FormData();
+          const formData = new FormData();
       formData.append('file', wavBlob, 'audio-chunk.wav');
       formData.append('timestamp', String(chunkStartTime - recordingStartTimeRef.current));
-      
+          
       // Log request details
       console.log(`Sending audio chunk to API: size=${wavBlob.size}, timestamp=${chunkStartTime - recordingStartTimeRef.current}ms`);
       
-      // Send to our API endpoint
-      const response = await fetch('/api/transcribe', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
+          // Send to our API endpoint
+          const response = await fetch('/api/transcribe', {
+            method: 'POST',
+            body: formData,
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
         console.error('API Error:', errorData);
         const errorMessage = `API Error (${response.status}): ${JSON.stringify(errorData)}`;
         setError(errorMessage);
@@ -397,7 +397,7 @@ export function useWhisperTranscription(): UseWhisperTranscriptionResult {
       cleanup();
     }
   }, [cleanup, processAudio, isRecording]);
-
+  
   // Reset transcript function
   const resetTranscript = useCallback(() => {
     setTranscript({
@@ -406,7 +406,7 @@ export function useWhisperTranscription(): UseWhisperTranscriptionResult {
     });
     setError(null);
   }, []);
-
+  
   return {
     transcript,
     isRecording,
