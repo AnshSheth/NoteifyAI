@@ -9,14 +9,11 @@ export default function PythonDemoPage() {
   const {
     transcript,
     interimTranscript,
-    notes,
     isRecording,
-    isGeneratingNotes,
     error,
     startRecording,
     stopRecording,
     resetTranscript,
-    triggerNotesGeneration,
     currentSessionId
   } = useRealtimeTranscription();
   
@@ -129,7 +126,7 @@ export default function PythonDemoPage() {
       <Card className="p-6">
         <h2 className="text-xl font-semibold mb-4">How It Works</h2>
         <ul className="list-disc list-inside space-y-2">
-          <li>Uses the browser's Speech Recognition API to capture audio in real-time</li>
+          <li>Uses the browser&apos;s Speech Recognition API to capture audio in real-time</li>
           <li>Processes speech into transcript segments with timestamps</li>
           <li>Updates the transcript with interim results as you speak</li>
           <li>Finalizes segments when phrases are completed</li>
