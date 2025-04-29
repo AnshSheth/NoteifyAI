@@ -11,7 +11,7 @@ const formatNotesContent = (text: string) => {
   if (!text) return '';
   
   // Replace bold text first (process ** formatting)
-  let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   
   // Process lines with bullet points and indentation
   return formattedText
@@ -34,7 +34,7 @@ const formatNotesContent = (text: string) => {
 export default function RecordPage() {
   // Use the RealtimeTranscription hook
   const { 
-    transcript,
+    transcript, 
     interimTranscript,
     notes: generatedNotes,
     isRecording, 
@@ -44,7 +44,6 @@ export default function RecordPage() {
     stopRecording, 
     resetTranscript,
     triggerNotesGeneration,
-    currentSessionId
   } = useRealtimeTranscription();
   
   const [notes, setNotes] = useState<string>('');
@@ -52,7 +51,6 @@ export default function RecordPage() {
   // Refs for the transcript segments
   const transcriptSegmentsRef = useRef<{timestamp: string; text: string}[]>([]);
   const transcriptContainerRef = useRef<HTMLDivElement>(null);
-  const lastInterimRef = useRef<string>('');
   const startTimeRef = useRef<number>(0);
   
   // Reset when recording starts
@@ -67,13 +65,6 @@ export default function RecordPage() {
       }
     }
   }, [isRecording]);
-  
-  // Function to format time stamps
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' + secs : secs}`;
-  };
   
   // Remove interim-driven update and use finalized transcript to update UI every 5 seconds
   // EFFECT: Add new transcript segments when the finalized transcript array changes
@@ -164,7 +155,7 @@ export default function RecordPage() {
           {/* Recording UI */}
           <div className="flex flex-col items-center py-6">
             {/* Recording Button */}
-            <button 
+            <button
               onClick={isRecording ? stopRecording : startRecording}
               className={`
                 px-8 py-4 rounded-full transition-all duration-300 
@@ -188,7 +179,7 @@ export default function RecordPage() {
                 <>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                  </svg>
+                </svg>
                   <span>Start Recording</span>
                 </>
               )}
@@ -281,14 +272,14 @@ export default function RecordPage() {
           <div className="bg-white rounded-xl shadow-lg p-8">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold flex items-center">
-                <svg className="h-5 w-5 mr-2 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+              <svg className="h-5 w-5 mr-2 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 12l2.846.813a4.5 4.5 0 013.09 3.09L24 18.75l-.813-2.846a4.5 4.5 0 01-3.09-3.09L18.259 12zm0 0l-2.846-.813a4.5 4.5 0 01-3.09-3.09L10.5 5.25l.813 2.846a4.5 4.5 0 013.09 3.09L18.259 12z" />
-                </svg>
+              </svg>
                 Lecture Summary
-                {isGeneratingNotes && (
+              {isGeneratingNotes && (
                   <span className="ml-2 text-sm text-gray-500 italic">(Generating...)</span>
-                )}
-              </h2>
+              )}
+            </h2>
               
               {/* Generate Notes Button */}
               <button
@@ -362,4 +353,4 @@ export default function RecordPage() {
       </div>
     </div>
   );
-}
+} 

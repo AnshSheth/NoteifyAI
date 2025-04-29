@@ -2,11 +2,6 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js' // Import Supabase client
 import { v4 as uuidv4 } from 'uuid';
 
-interface TranscriptSegment {
-  text: string;
-  timestamp: string;
-}
-
 // Define interfaces for our hook
 interface Segment {
   timestamp: string;
@@ -59,10 +54,10 @@ interface SpeechRecognition extends EventTarget {
   start(): void;
   stop(): void;
   abort(): void;
-  onerror: ((this: SpeechRecognition, ev: Event) => any) | null;
-  onend: ((this: SpeechRecognition, ev: Event) => any) | null;
-  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
-  onstart: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onerror: ((this: SpeechRecognition, ev: Event) => unknown) | null;
+  onend: ((this: SpeechRecognition, ev: Event) => unknown) | null;
+  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => unknown) | null;
+  onstart: ((this: SpeechRecognition, ev: Event) => unknown) | null;
 }
 
 // Define window interfaces
@@ -87,11 +82,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
   // Handle the error appropriately - maybe disable note generation
 }
 
-const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
-
-// --- Configuration --- 
-const NOTE_UPDATE_INTERVAL_MS = 8000; // Update notes every 8 seconds
-// -------------------
+// Create client but don't use it directly in this hook - used by the notes API instead
+createClient(supabaseUrl || '', supabaseAnonKey || '');
 
 // Interval for forced timestamp chunks (in milliseconds)
 const FORCED_CHUNK_INTERVAL = 5000; // 5 seconds - per user request
@@ -182,7 +174,7 @@ export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
   // Initialize speech recognition
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
     // Check browser support
     if (!('webkitSpeechRecognition' in window) && 
         !('SpeechRecognition' in window)) {
@@ -279,7 +271,7 @@ export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
       }
     };
   }, []);
-  
+
   // Start recording
   const startRecording = useCallback(() => {
     if (!recognitionRef.current) {
@@ -319,7 +311,7 @@ export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
       setError(`Failed to start recording: ${err instanceof Error ? err.message : String(err)}`);
     }
   }, [flushPending]);
-  
+
   // Stop recording
   const stopRecording = useCallback(() => {
     if (!isRecording) return;
@@ -352,14 +344,14 @@ export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
       }
     };
   }, []);
-  
+
   // Reset transcript
   const resetTranscript = useCallback(() => {
     setTranscript([]);
     setInterimTranscript('');
-    setNotes('');
+    setNotes(''); 
     setError(null);
-    setCurrentSessionId(null);
+    setCurrentSessionId(null); 
     pendingTextRef.current = '';
     interimTextRef.current = '';
   }, []);
@@ -406,13 +398,13 @@ export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
       setIsGeneratingNotes(false);
     }
   }, [transcript, currentSessionId]);
-  
+
   return {
     transcript,
     interimTranscript,
-    notes,
+    notes, 
     isRecording,
-    isGeneratingNotes,
+    isGeneratingNotes, 
     error,
     startRecording,
     stopRecording,
