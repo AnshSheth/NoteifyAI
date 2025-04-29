@@ -1,20 +1,24 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { usePythonWhisperTranscription } from '@/hooks/usePythonWhisperTranscription';
+import { useRealtimeTranscription } from '@/hooks/useRealtimeTranscription';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 export default function PythonDemoPage() {
   const {
-    transcription,
+    transcript,
+    interimTranscript,
+    notes,
     isRecording,
+    isGeneratingNotes,
     error,
     startRecording,
     stopRecording,
-    resetTranscription,
-    isModelLoaded
-  } = usePythonWhisperTranscription();
+    resetTranscript,
+    triggerNotesGeneration,
+    currentSessionId
+  } = useRealtimeTranscription();
   
   const [debugMessages, setDebugMessages] = useState<string[]>([]);
   const debugRef = useRef<HTMLDivElement>(null);
@@ -42,7 +46,7 @@ export default function PythonDemoPage() {
   
   return (
     <div className="container mx-auto py-6 space-y-6">
-      <h1 className="text-3xl font-bold">Python-style Whisper Transcription Demo</h1>
+      <h1 className="text-3xl font-bold">Realtime Transcription Demo</h1>
       
       <Card className="p-6 space-y-4">
         <div className="flex gap-4">
@@ -55,7 +59,7 @@ export default function PythonDemoPage() {
           </Button>
           
           <Button 
-            onClick={resetTranscription} 
+            onClick={resetTranscript} 
             variant="outline"
             disabled={isRecording}
           >
@@ -70,8 +74,8 @@ export default function PythonDemoPage() {
             <span>{isRecording ? 'Recording...' : 'Not Recording'}</span>
           </div>
           <div className="flex items-center gap-2 mt-2">
-            <div className={`h-3 w-3 rounded-full ${isModelLoaded ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-            <span>{isModelLoaded ? 'Model Ready' : 'Model Loading...'}</span>
+            <div className={`h-3 w-3 rounded-full ${currentSessionId ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+            <span>{currentSessionId ? 'Session Active' : 'No Active Session'}</span>
           </div>
           {error && (
             <div className="mt-2 text-red-500">
@@ -85,13 +89,16 @@ export default function PythonDemoPage() {
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">Live Transcription</h2>
           <div className="border rounded-md p-4 min-h-[400px] max-h-[400px] overflow-y-auto bg-gray-50">
-            {transcription.length > 0 ? (
+            {transcript.length > 0 ? (
               <div className="space-y-2">
-                {transcription.map((segment, index) => (
+                {transcript.map((segment, index) => (
                   <p key={index} className="text-lg">
-                    {segment.text}
+                    <span className="text-gray-500 font-medium">[{segment.timestamp}]</span> {segment.text}
                   </p>
                 ))}
+                {interimTranscript && (
+                  <p className="text-blue-500 italic">{interimTranscript}</p>
+                )}
               </div>
             ) : (
               <p className="text-gray-500 italic">
@@ -122,12 +129,11 @@ export default function PythonDemoPage() {
       <Card className="p-6">
         <h2 className="text-xl font-semibold mb-4">How It Works</h2>
         <ul className="list-disc list-inside space-y-2">
-          <li>Records audio in small chunks (2 seconds each)</li>
-          <li>Accumulates audio data for the current phrase</li>
-          <li>If silence is detected for 3 seconds, considers the phrase complete</li>
-          <li>Sends audio to dedicated Python-style OpenAI Whisper API endpoint</li>
-          <li>Updates the transcript in real-time as you speak</li>
-          <li>Finalizes phrases when a natural pause is detected</li>
+          <li>Uses the browser's Speech Recognition API to capture audio in real-time</li>
+          <li>Processes speech into transcript segments with timestamps</li>
+          <li>Updates the transcript with interim results as you speak</li>
+          <li>Finalizes segments when phrases are completed</li>
+          <li>Can generate AI notes based on the full transcript</li>
         </ul>
       </Card>
     </div>
