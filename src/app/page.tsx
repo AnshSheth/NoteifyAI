@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 
 export default function Home() {
@@ -44,7 +43,7 @@ export default function Home() {
               </h1>
               
               <p className="mt-6 text-lg text-gray-600 max-w-lg">
-                Real-time lecture transcription that lets you capture classroom content instantly as it's being taught. Perfect for students, researchers, and academic professionals.
+                Real-time lecture transcription that lets you capture classroom content instantly as it&apos;s being taught. Perfect for students, researchers, and academic professionals.
               </p>
               
               <div className="mt-8 flex flex-wrap gap-4">
