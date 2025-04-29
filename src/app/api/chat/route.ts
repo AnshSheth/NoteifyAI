@@ -30,7 +30,7 @@ If the answer is not contained in the transcript, politely say that you don't kn
 Be concise, helpful, and informative in your responses.`;
 
     // Convert chat history to OpenAI format
-    const previousMessages = history ? history.map((msg: { role: string; content: string }) => ({
+    const previousMessages = history ? history.map((msg: any) => ({
       role: msg.role,
       content: msg.content,
     })) : [];

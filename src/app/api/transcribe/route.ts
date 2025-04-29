@@ -117,18 +117,26 @@ export async function POST(req: Request) {
       }
       
       return NextResponse.json(transcription);
-    } catch (error) {
-      console.error("Error transcribing audio:", error);
+    } catch (apiError: any) {
+      console.error('[API] OpenAI API Error:', apiError);
+      console.error('[API] Error details:', apiError.message);
+      
+      // Provide detailed error response
       return NextResponse.json(
-        { error: "Failed to transcribe audio", details: error instanceof Error ? error.message : String(error) },
+        { 
+          error: `OpenAI API Error: ${apiError.message || 'Unknown error'}`,
+          status: apiError.status || 500,
+          type: apiError.type || 'unknown'
+        },
         { status: 500 }
       );
     }
     
-  } catch (error) {
-    console.error("Error:", error);
+  } catch (error: any) {
+    console.error('[API] Transcription error:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Failed to process request", details: error instanceof Error ? error.message : String(error) },
+      { error: `Transcription failed: ${errorMessage}` },
       { status: 500 }
     );
   } finally {
