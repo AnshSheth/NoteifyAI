@@ -1,11 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js' // Import Supabase client
 import { v4 as uuidv4 } from 'uuid';
-
-interface TranscriptSegment {
-  text: string;
-  timestamp: string;
-}
 
 // Define interfaces for our hook
 interface Segment {
@@ -59,10 +53,10 @@ interface SpeechRecognition extends EventTarget {
   start(): void;
   stop(): void;
   abort(): void;
-  onerror: ((this: SpeechRecognition, ev: Event) => any) | null;
-  onend: ((this: SpeechRecognition, ev: Event) => any) | null;
-  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
-  onstart: ((this: SpeechRecognition, ev: Event) => any) | null;
+  onerror: ((this: SpeechRecognition, ev: Event) => void) | null;
+  onend: ((this: SpeechRecognition, ev: Event) => void) | null;
+  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => void) | null;
+  onstart: ((this: SpeechRecognition, ev: Event) => void) | null;
 }
 
 // Define window interfaces
@@ -77,8 +71,7 @@ declare global {
   }
 }
 
-// Initialize Supabase client (replace with your actual URL and anon key)
-// Store these in environment variables for security (.env.local)
+// Initialize environment variables
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -86,12 +79,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Supabase URL or Anon Key is missing. Please check your .env.local file.');
   // Handle the error appropriately - maybe disable note generation
 }
-
-const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
-
-// --- Configuration --- 
-const NOTE_UPDATE_INTERVAL_MS = 8000; // Update notes every 8 seconds
-// -------------------
 
 // Interval for forced timestamp chunks (in milliseconds)
 const FORCED_CHUNK_INTERVAL = 5000; // 5 seconds - per user request
@@ -210,7 +197,7 @@ export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
     };
     
     recognition.onerror = (event: Event) => {
-      // Cast to unknown first, then to the expected shape
+      // Cast to unknown first, then to the expected shape with a type assertion
       const errorEvent = event as unknown as { error: string };
       console.error('Speech recognition error', errorEvent.error);
       setError(`Speech recognition error: ${errorEvent.error}`);
@@ -351,7 +338,7 @@ export function useRealtimeTranscription(): UseRealtimeTranscriptionResult {
         clearInterval(flushIntervalRef.current);
       }
     };
-  }, []);
+  }, [isRecording]);
   
   // Reset transcript
   const resetTranscript = useCallback(() => {

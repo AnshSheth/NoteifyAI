@@ -1,16 +1,10 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 interface Segment {
   id: number;
   start: number;
   end: number;
   text: string;
-}
-
-interface TranscriptionResponse {
-  text: string;
-  segments: Segment[];
 }
 
 interface UseWhisperTranscriptionResult {
@@ -381,22 +375,25 @@ export function useWhisperTranscription(): UseWhisperTranscriptionResult {
 
   // Stop recording function
   const stopRecording = useCallback(async () => {
-    if (!isRecording) {
-      return;
-    }
+    if (!isRecording) return;
+    
+    setIsRecording(false);
+    console.log('Stopping recording...');
     
     try {
-      // Process any remaining audio
+      // Final processing of any remaining audio
       await processAudio();
       
+      // Cleanup resources
+      cleanup();
     } catch (error) {
-      console.error('Error stopping recording:', error);
-      setError(error instanceof Error ? error.message : String(error));
+      console.error('Error in stop recording:', error);
+      setError(`Error finalizing recording: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
-      setIsRecording(false);
+      setIsProcessing(false);
       cleanup();
     }
-  }, [cleanup, processAudio, isRecording]);
+  }, [isRecording, cleanup, processAudio]);
 
   // Reset transcript function
   const resetTranscript = useCallback(() => {

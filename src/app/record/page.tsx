@@ -11,7 +11,7 @@ const formatNotesContent = (text: string) => {
   if (!text) return '';
   
   // Replace bold text first (process ** formatting)
-  let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   
   // Process lines with bullet points and indentation
   return formattedText
@@ -43,8 +43,7 @@ export default function RecordPage() {
     startRecording, 
     stopRecording, 
     resetTranscript,
-    triggerNotesGeneration,
-    currentSessionId
+    triggerNotesGeneration
   } = useRealtimeTranscription();
   
   const [notes, setNotes] = useState<string>('');
@@ -52,7 +51,6 @@ export default function RecordPage() {
   // Refs for the transcript segments
   const transcriptSegmentsRef = useRef<{timestamp: string; text: string}[]>([]);
   const transcriptContainerRef = useRef<HTMLDivElement>(null);
-  const lastInterimRef = useRef<string>('');
   const startTimeRef = useRef<number>(0);
   
   // Reset when recording starts
@@ -67,13 +65,6 @@ export default function RecordPage() {
       }
     }
   }, [isRecording]);
-  
-  // Function to format time stamps
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' + secs : secs}`;
-  };
   
   // Remove interim-driven update and use finalized transcript to update UI every 5 seconds
   // EFFECT: Add new transcript segments when the finalized transcript array changes

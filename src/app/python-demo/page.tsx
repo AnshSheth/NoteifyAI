@@ -9,14 +9,11 @@ export default function PythonDemoPage() {
   const {
     transcript,
     interimTranscript,
-    notes,
     isRecording,
-    isGeneratingNotes,
     error,
     startRecording,
     stopRecording,
     resetTranscript,
-    triggerNotesGeneration,
     currentSessionId
   } = useRealtimeTranscription();
   
