@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       console.error('[API] No audio file provided in request');
       return NextResponse.json({ error: 'No audio file provided' }, { status: 400 });
     }
-    
+
     // Log file information
     console.log(`[API] Received file: ${file.name}, type: ${file.type}, size: ${file.size} bytes`);
     console.log(`[API] Start timestamp: ${startTimestamp}`);
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       console.error(`[API] File too small: ${file.size} bytes`);
       return NextResponse.json({ error: 'Audio file too small to process' }, { status: 400 });
     }
-    
+
     // Create a unique filename - use the same extension as the original
     // Prefer .wav for our new implementation
     let fileExt = '.wav';
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     
     // Send to OpenAI for transcription
     console.log('[API] Sending to OpenAI Whisper API...');
-    
+
     try {
       // Create a file stream to pass to OpenAI
       const fileStream = fs.createReadStream(filePath);
@@ -93,16 +93,16 @@ export async function POST(req: Request) {
         console.error('[API] File stream error:', err);
       });
       
-      const transcription = await openai.audio.transcriptions.create({
+    const transcription = await openai.audio.transcriptions.create({
         file: fileStream,
-        model: 'whisper-1',
+      model: 'whisper-1',
         response_format: 'verbose_json',
         timestamp_granularities: ['segment'],
         language: 'en',           // Force English language detection
         prompt: 'Transcribe the following audio accurately', // Help guide the model
         temperature: 0.2          // Lower temperature for more accurate results
-      });
-      
+    });
+
       console.log('[API] Transcription completed successfully');
       
       // Adjust timestamps based on recording offset
@@ -117,22 +117,35 @@ export async function POST(req: Request) {
       }
       
       return NextResponse.json(transcription);
-    } catch (apiError: any) {
+    } catch (apiError: unknown) {
       console.error('[API] OpenAI API Error:', apiError);
-      console.error('[API] Error details:', apiError.message);
+      
+      let errorMessage = 'Unknown error';
+      let status = 500;
+      let type = 'unknown';
+      
+      if (apiError instanceof Error) {
+        errorMessage = apiError.message;
+        // Try to extract status and type if available (for OpenAI errors)
+        const openAIError = apiError as Error & { status?: number; type?: string };
+        status = openAIError.status || 500;
+        type = openAIError.type || 'unknown';
+      }
+      
+      console.error('[API] Error details:', errorMessage);
       
       // Provide detailed error response
       return NextResponse.json(
         { 
-          error: `OpenAI API Error: ${apiError.message || 'Unknown error'}`,
-          status: apiError.status || 500,
-          type: apiError.type || 'unknown'
+          error: `OpenAI API Error: ${errorMessage}`,
+          status: status,
+          type: type
         },
         { status: 500 }
       );
     }
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[API] Transcription error:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(

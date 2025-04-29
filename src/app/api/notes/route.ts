@@ -77,10 +77,11 @@ export async function POST(request: NextRequest) {
 
     // Return the generated notes
     return NextResponse.json({ updatedNotes: generatedNotes });
-  } catch (error: any) {
-    console.error("Error generating notes:", error.message);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error generating notes:", errorMessage);
     return NextResponse.json(
-      { error: `Failed to generate notes: ${error.message}` },
+      { error: `Failed to generate notes: ${errorMessage}` },
       { status: 500 }
     );
   }

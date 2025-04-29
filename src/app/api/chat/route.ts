@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
+// Define interfaces for chat messages
+interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
 // Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -30,7 +36,7 @@ If the answer is not contained in the transcript, politely say that you don't kn
 Be concise, helpful, and informative in your responses.`;
 
     // Convert chat history to OpenAI format
-    const previousMessages = history ? history.map((msg: any) => ({
+    const previousMessages = history ? history.map((msg: ChatMessage) => ({
       role: msg.role,
       content: msg.content,
     })) : [];
