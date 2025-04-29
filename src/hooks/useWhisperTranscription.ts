@@ -1,16 +1,10 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 interface Segment {
   id: number;
   start: number;
   end: number;
   text: string;
-}
-
-interface TranscriptionResponse {
-  text: string;
-  segments: Segment[];
 }
 
 interface UseWhisperTranscriptionResult {
@@ -85,6 +79,13 @@ class WavEncoder {
     for (let i = 0; i < string.length; i++) {
       view.setUint8(offset + i, string.charCodeAt(i));
     }
+  }
+}
+
+// Define the webkitAudioContext type
+declare global {
+  interface Window {
+    webkitAudioContext: typeof AudioContext;
   }
 }
 
@@ -287,7 +288,8 @@ export function useWhisperTranscription(): UseWhisperTranscriptionResult {
       streamRef.current = stream;
       
       // Create audio context
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)({
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      const audioContext = new AudioContextClass({
         sampleRate: 16000 // Use 16kHz sample rate for Whisper
       });
       audioContextRef.current = audioContext;
